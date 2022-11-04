@@ -8,4 +8,4 @@ class Course(models.Model):
     teacher_profile = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='course_teacher')
 
     def __str__(self):
-        return f'{self.course_title}'
+        return f'{self.course_id}'
