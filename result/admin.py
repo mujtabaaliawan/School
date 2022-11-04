@@ -1,6 +1,7 @@
 from django.contrib import admin
 from result.models import Result
 
+print("yo")
 
 class ResultAdmin(admin.ModelAdmin):
     fieldsets = [
