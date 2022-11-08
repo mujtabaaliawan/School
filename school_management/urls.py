@@ -10,8 +10,8 @@ urlpatterns = [
     path('', include('student.urls')),
     path('', include('course.urls')),
     path('', include('result.urls')),
-    path('get_token/', TokenObtainPairView.as_view),
-    path('refresh_token/', TokenRefreshView.as_view),
+    path('get_token/', TokenObtainPairView.as_view()),
+    path('refresh_token/', TokenRefreshView.as_view()),
 ]
 
 

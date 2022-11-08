@@ -9,7 +9,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Teacher
-        fields = ['base_profile', 'role']
+        fields = ['id', 'base_profile', 'role']
 
     def create(self, validated_data):
         user_data = validated_data.get('base_profile')
