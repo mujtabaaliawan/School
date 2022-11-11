@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import ResultViewSet
+from .views import Result
 
 
 urlpatterns = [
-    path('result/', ResultViewSet.as_view()),
+    path('result/', Result.as_view(), name='result_section'),
 ]

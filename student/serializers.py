@@ -33,3 +33,4 @@ class StudentCourseSerializer(serializers.ModelSerializer):
         course = validated_data.get('enrolled_course')
         instance.enrolled_course.add(course[0])
         return instance
+
