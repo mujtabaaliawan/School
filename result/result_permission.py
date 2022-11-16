@@ -14,5 +14,7 @@ class IsSubjectTeacher(BasePermission):
         pk = view.kwargs['pk']
         subject_teacher_id = Result.objects.get(id=pk).course.course_teacher.user.id
         user_id = request.user.id
+        if user_id is None:
+            return False
         return int(user_id) == int(subject_teacher_id)
 

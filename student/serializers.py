@@ -26,7 +26,6 @@ class StudentSerializer(serializers.ModelSerializer):
         representation["ID"] = instance.id
         representation["Name"] = instance.user.first_name
         representation["Email"] = instance.user.email
-        representation["Role"] = instance.role
         course_count = 0
         course_detail = dict()
         for subject in instance.enrolled_course.all():
