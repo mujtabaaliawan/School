@@ -38,14 +38,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_profile',
     'teacher',
-    'course',
     'student',
+    'staff',
+    'course',
     'result',
 
 ]
 
 AUTH_USER_MODEL = 'user_profile.User'
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/teacher/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/results'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'school_management.greet_middleware.Greet',
+    # 'school_management.greet_middleware.Greet',
 ]
 
 ROOT_URLCONF = 'school_management.urls'
@@ -147,6 +148,12 @@ SIMPLE_JWT = {
 #     ),
 # }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 
-
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}

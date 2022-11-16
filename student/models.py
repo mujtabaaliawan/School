@@ -5,12 +5,15 @@ from django.db import models
 
 class Student(models.Model):
 
-    base_profile = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    choice = (
+        ("student", "STUDENT"),
+        )
+    role = models.CharField(max_length=10, choices=choice, default="STUDENT")
     enrolled_course = models.ManyToManyField(Course)
 
     def __str__(self):
-        return f'{self.id}' + ' ' + f'{self.base_profile.email}'
+        return f'{self.id}' + ' ' + f'{self.user.email}'
 
 
 

@@ -8,6 +8,7 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     path('', include('teacher.urls')),
     path('', include('student.urls')),
+    path('', include('staff.urls')),
     path('', include('course.urls')),
     path('', include('result.urls')),
     path('get_token/', TokenObtainPairView.as_view()),

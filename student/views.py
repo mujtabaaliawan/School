@@ -1,18 +1,41 @@
 from .models import Student
-from .serializers import StudentSerializer, StudentCourseSerializer
-from rest_framework.generics import ListCreateAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny
-from rest_framework.authentication import BasicAuthentication
+from .serializers import StudentSerializer, EnrollmentSerializer, EnrollmentAdminSerializer
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import IsAdminUser
+from .student_permission import IsStudentStaff, IsStudent
 
 
-class StudentViewSet(ListCreateAPIView):
+class StudentList(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
 
-class EnrollCourseViewSet(UpdateAPIView):
+class StudentCreate(CreateAPIView):
     queryset = Student.objects.all()
-    serializer_class = StudentCourseSerializer
+    serializer_class = StudentSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+class StudentUpdate(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    permission_classes = [IsStudentStaff]
+
+
+class EnrollmentNew(UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = EnrollmentSerializer
+
+    permission_classes = [IsStudent]
+
+
+class EnrollmentUpdate(RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = EnrollmentAdminSerializer
+
+    permission_classes = [IsAdminUser]

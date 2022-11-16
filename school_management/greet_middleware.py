@@ -1,5 +1,3 @@
-import result.views
-
 class Greet:
 
     def __init__(self, get_response):
@@ -13,6 +11,9 @@ class Greet:
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if view_func.view_class is result.views.Result:
-            print("You have entered the result section")
+        view_function = view_func.__module__ + '.' + view_func.__name__
+        print(view_function)
+        print(view_func.view_class)
+        # if view_func.view_class is result.views.Result:
+        #     print("You have entered the result section")
         return None

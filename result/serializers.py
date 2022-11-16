@@ -7,13 +7,15 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Result
-        fields = ['student', 'course', 'score']
+        fields = ['id', 'student', 'course', 'score']
 
     def validate(self, data):
-
         student = data.get('student')
-        course_id = data.get('course').id
-        is_enrolled = student.enrolled_course.filter(id=course_id).exists()
-        if is_enrolled:
+        course = data.get('course')
+        assigned_teacher_id = course.course_teacher.user.id
+        user_id = self.context['request'].user.id
+        is_enrolled = student.enrolled_course.filter(id=course.id).exists()
+        print(is_enrolled)
+        if is_enrolled and int(assigned_teacher_id) == int(user_id):
             return data
-        raise serializers.ValidationError("Course Not Enrolled")
+        raise serializers.ValidationError("Wrong Input of Result Parameters")

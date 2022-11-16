@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import Result
+from result import views
 
 
 urlpatterns = [
-    path('result/', Result.as_view(), name='result_section'),
+    path('results', views.ResultList.as_view(), name='result_list'),
+    path('results/new', views.ResultCreate.as_view(), name='result_new'),
+    path('results/<int:pk>', views.ResultUpdate.as_view(), name='result_update'),
 ]
