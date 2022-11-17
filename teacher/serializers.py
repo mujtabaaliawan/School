@@ -12,7 +12,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Teacher
-        fields = ['id', 'user', 'role']
+        fields = ['id', 'user', 'role', 'mobile_number']
 
     def create(self, validated_data):
         user = UserSerializer.create(self, validated_data=validated_data)
@@ -25,6 +25,8 @@ class TeacherSerializer(serializers.ModelSerializer):
         representation['Teacher ID'] = instance.id
         representation['Teacher Name'] = instance.user.first_name
         representation['Teacher Email'] = instance.user.email
+        representation['Teacher Mobile Number'] = instance.mobile_number
+        representation['Teacher User ID'] = instance.user.id
         taught_courses = dict()
         course_count = 1
         for subject in courses:
@@ -59,7 +61,7 @@ class TeacherBasicSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Teacher
-        fields = ['id', 'user', 'role']
+        fields = ['id', 'user', 'role', 'mobile_number']
 
     def to_representation(self, instance):
         representation = dict()
@@ -77,7 +79,5 @@ class TeacherBasicSerializer(serializers.ModelSerializer):
             course_count = course_count + 1
         representation['Teacher Subjects'] = taught_courses
         return representation
-
-
 
 

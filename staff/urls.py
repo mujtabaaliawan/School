@@ -3,7 +3,7 @@ from staff import views
 
 
 urlpatterns = [
-    path('staff', views.StaffList.as_view(), name='staff_list'),
-    path('staff/new', views.StaffCreate.as_view(), name='new_staff'),
-    path('staff/<int:pk>', views.StaffUpdate.as_view(), name='staff_update'),
+    path('staff', views.AdminList.as_view(), name='staff_list'),
+    path('staff/new', views.AdminCreate.as_view(), name='new_staff'),
+    path('staff/<int:pk>', views.AdminUpdate.as_view(), name='staff_update'),
 ]

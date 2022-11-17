@@ -1,15 +1,9 @@
 from .models import Teacher
 from .serializers import TeacherSerializer, TeacherBasicSerializer
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from .teacher_permission import IsTeacherStaff
-
-
-class TeacherDetailList(ListAPIView):
-    queryset = Teacher.objects.all()
-    serializer_class = TeacherSerializer
-
-    permission_classes = [IsAdminUser]
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+from .admin_permission import IsAdmin
+from .teacher_permission import IsTeacher
 
 
 class TeacherList(ListAPIView):
@@ -19,15 +13,23 @@ class TeacherList(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class TeacherDetailList(ListAPIView):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+
+    permission_classes = [IsAdmin]
+
+
 class TeacherCreate(CreateAPIView):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
 
 
-class TeacherUpdate(RetrieveUpdateDestroyAPIView):
+class TeacherRetrieveUpdate(RetrieveUpdateAPIView):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-    permission_classes = [IsTeacherStaff]
+    permission_classes = [IsTeacher]
+

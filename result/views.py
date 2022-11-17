@@ -3,14 +3,14 @@ from result.serializers import ResultSerializer
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from .result_permission import IsTeacher, IsSubjectTeacher
-from rest_framework.permissions import IsAdminUser
+from .admin_permission import IsAdmin
 
 
 class ResultList(ListAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
 
 
 class ResultCreate(CreateAPIView):

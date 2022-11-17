@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'user_profile.User'
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/results'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

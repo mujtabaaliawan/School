@@ -11,7 +11,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Student
-        fields = ['id', 'user', 'role', 'enrolled_course']
+        fields = ['id', 'user', 'role', 'mobile_number', 'enrolled_course']
         extra_kwargs = {
             'enrolled_course': {'read_only': True}
         }
@@ -26,6 +26,8 @@ class StudentSerializer(serializers.ModelSerializer):
         representation["ID"] = instance.id
         representation["Name"] = instance.user.first_name
         representation["Email"] = instance.user.email
+        representation["Mobile Number"] = instance.mobile_number
+        representation["User ID"] = instance.user.id
         course_count = 0
         course_detail = dict()
         for subject in instance.enrolled_course.all():
@@ -55,8 +57,6 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         course = validated_data.get('enrolled_course')
-        print(course)
-        print(course[0])
         instance.enrolled_course.add(course[0])
         return instance
 

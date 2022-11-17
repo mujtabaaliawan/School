@@ -21,17 +21,21 @@ class CustomUserManager(BaseUserManager):
         email = user_data.get('email')
         first_name = user_data.get('first_name')
         password = user_data.get('password')
-        if role is 'teacher':
-            print('yes teacher')
+        if role == 'teacher':
             extra_fields.setdefault('is_teacher', True)
-        elif role is 'student':
+        elif role == 'student':
             extra_fields.setdefault('is_student', True)
-        elif role is 'staff':
-            extra_fields.setdefault('is_staff', True)
+        elif role == 'admin':
+            extra_fields.setdefault('is_admin', True)
+        else:
+            raise ValueError("Role is not correct")
         return self._create_user(email, password, first_name, **extra_fields)
 
     def create_superuser(self, email, password, first_name, **extra_fields):
+        extra_fields.setdefault('is_teacher', True)
+        extra_fields.setdefault('is_student', True)
         extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_admin', True)
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_superuser', True)
         return self._create_user(email, password, first_name, **extra_fields)
