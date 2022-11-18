@@ -18,7 +18,9 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = UserSerializer.create(self, validated_data=validated_data)
-        student, created = Student.objects.update_or_create(user=user)
+        role = validated_data.get('role')
+        mobile_number = validated_data.get('mobile_number')
+        student, created = Student.objects.update_or_create(user=user, role=role, mobile_number=mobile_number)
         return student
 
     def to_representation(self, instance):

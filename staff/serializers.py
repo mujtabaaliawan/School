@@ -12,7 +12,9 @@ class StaffSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = UserSerializer.create(self, validated_data=validated_data)
-        staff, created = Admin.objects.update_or_create(user=user)
+        role = validated_data.get('role')
+        mobile_number = validated_data.get('mobile_number')
+        staff, created = Admin.objects.update_or_create(user=user, role=role, mobile_number=mobile_number)
         return staff
 
     def to_representation(self, instance):
@@ -21,6 +23,6 @@ class StaffSerializer(serializers.ModelSerializer):
         representation['Staff User ID'] = instance.user.id
         representation['Staff Name'] = instance.user.first_name
         representation['Staff Email'] = instance.user.email
-        representation['Staff Mobile Number'] = instance.user.email
+        representation['Staff Mobile Number'] = instance.mobile_number
 
         return representation

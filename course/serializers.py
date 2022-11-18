@@ -10,11 +10,11 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = dict()
-        representation["course_id"] = instance.id
-        representation["course_title"] = instance.course_title
-        representation["teacher_id"] = instance.course_teacher.id
-        representation["teacher_name"] = instance.course_teacher.user.first_name
-        representation["teacher_email"] = instance.course_teacher.user.email
+        representation["Course ID"] = instance.id
+        representation["Course Title"] = instance.course_title
+        representation["Teacher ID"] = instance.course_teacher.id
+        representation["Teacher Name"] = instance.course_teacher.user.first_name
+        representation["Teacher Email"] = instance.course_teacher.user.email
         return representation
 
 
