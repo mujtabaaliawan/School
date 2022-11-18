@@ -66,4 +66,4 @@ class EnrollmentAdminSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Student
-        fields = ['id', 'enrolled_course']
+        fields = ['enrolled_course']

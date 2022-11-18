@@ -9,4 +9,4 @@ class IsTeacher(BasePermission):
         teacher_user_id = Teacher.objects.get(id=view.kwargs['pk']).user.id
         if user_id is None:
             return False
-        return int(user_id) == int(teacher_user_id)
+        return int(user_id) == int(teacher_user_id) or request.user.is_superuser

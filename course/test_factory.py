@@ -4,6 +4,7 @@ from user_profile.models import User
 from teacher.models import Teacher
 from student.models import Student
 from staff.models import Admin
+from course.models import Course
 from django.contrib.auth.hashers import make_password
 
 
@@ -52,3 +53,11 @@ class AdminFactory(DjangoModelFactory):
     user = factory.SubFactory('teacher.test_factory.UserFactory', first_name='Admin',
                               email='admin@gmail.com', password=make_password('admin'),
                               is_admin=True)
+
+
+class CourseFactory(DjangoModelFactory):
+    class Meta:
+        model = Course
+
+    course_title = 'course'
+    course_teacher = factory.SubFactory(TeacherFactory)

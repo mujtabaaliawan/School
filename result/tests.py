@@ -1,75 +1,105 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
+from course.models import Course
+from .test_factory import TeacherFactory, StudentFactory, AdminFactory, CourseFactory
 
 
-class TestStudent(APITestCase):
+class TestResult(APITestCase):
 
-    def test_result(self):
+    def test_create_result(self):
+        self.course = CourseFactory.create()
+        self.student = StudentFactory.create()
+        path = '/enrollment/' + f'{self.student.id}'
+        test_data = {
+            "enrolled_course": [self.course.id]
+            }
+        self.client.login(email='student@gmail.com', password='student')
+        response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        sample_data = {
-            "base_profile": {
-                "email": "jason@gmail.com",
-                "first_name": "Jason",
-                "password": "jason"
-            },
-            "role": "teacher"
-        }
-        path = "/teacher/"
-        self.client.post(path, json.dumps(sample_data), content_type='application/json')
-
-        path = "/course/"
-        course_data = {
-            'course_title': 'Power',
-            'teacher_profile': 2,
-            'user_id': 2
-        }
-
-        self.client.post(path, json.dumps(course_data), content_type='application/json')
-
-        sample_data = {
-            "base_profile": {
-                "email": "owais@gmail.com",
-                "first_name": "Owais",
-                "password": "owais"
-            },
-            "role": "student"
-        }
-        path = "/student_register/"
-        self.client.post(path, json.dumps(sample_data), content_type='application/json')
-
-        student_data = {
-            'email': "owais@gmail.com",
-            'password': "owais"
-        }
-        path = "/get_token/"
-        access_token_student = self.client.post\
-            (path, json.dumps(student_data), content_type='application/json').data.get("access")
-
-        teacher_data = {
-            'email': "jason@gmail.com",
-            'password': "jason"
+        test_data = {
+            "student": self.student.id,
+            "course": self.course.id,
+            "score": 90
         }
 
-        access_token_teacher = self.client.post\
-            (path, json.dumps(teacher_data), content_type='application/json').data.get("access")
+        path = "/results/new"
 
-        path = '/student_enroll/1'
-
-        sample_data = {
-            'enrolled_course': [2]
-        }
-
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token_student}')
-        self.client.patch(path, json.dumps(sample_data), content_type='application/json')
-
-        sample_data = {
-            'student': 1,
-            'course': 2,
-            'score': 100.0,
-            'user_id': 2
-        }
-        path = '/result/'
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token_teacher}')
-        response = self.client.post(path, json.dumps(sample_data), content_type='application/json')
+        self.client.login(email='teacher@gmail.com', password='teacher')
+        response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.client.login(email='student@gmail.com', password='student')
+        response = self.client.post(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.admin = AdminFactory.create()
+        self.client.login(email='admin@gmail.com', password='admin')
+        response = self.client.post(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_result(self):
+
+        self.course = CourseFactory.create()
+        self.student = StudentFactory.create()
+        path = '/enrollment/' + f'{self.student.id}'
+        test_data = {
+            "enrolled_course": [self.course.id]
+            }
+        self.client.login(email='student@gmail.com', password='student')
+        response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        test_data = {
+            "student": self.student.id,
+            "course": self.course.id,
+            "score": 90.0
+        }
+
+        path = "/results/new"
+
+        self.client.login(email='teacher@gmail.com', password='teacher')
+        result_id = self.client.post(path, json.dumps(test_data), content_type='application/json').data.get('id')
+
+        test_data = {
+            "id": result_id,
+            "student": self.student.id,
+            "course": self.course.id,
+            "score": 80.0
+        }
+
+        path = '/results/' + f'{result_id}'
+
+        self.admin = AdminFactory.create()
+        self.client.login(email='admin@gmail.com', password='admin')
+        response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.login(email='teacher@gmail.com', password='teacher')
+        response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.client.login(email='student@gmail.com', password='student')
+        response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_result_list(self):
+
+        path = '/results'
+
+        self.admin = AdminFactory.create()
+        self.client.login(email='admin@gmail.com', password='admin')
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.teacher = TeacherFactory.create()
+        self.client.login(email='teacher@gmail.com', password='teacher')
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.student = StudentFactory.create()
+        self.client.login(email='student@gmail.com', password='student')
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
