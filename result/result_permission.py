@@ -16,5 +16,5 @@ class IsSubjectTeacher(BasePermission):
         user_id = request.user.id
         if user_id is None:
             return False
-        return int(user_id) == int(subject_teacher_id) or request.user.is_superuser
+        return user_id == subject_teacher_id or request.user.is_superuser
 

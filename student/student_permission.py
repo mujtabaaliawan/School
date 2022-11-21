@@ -9,4 +9,4 @@ class IsStudent(BasePermission):
         student_user_id = Student.objects.get(id=view.kwargs['pk']).user.id
         if user_id is None:
             return False
-        return int(user_id) == int(student_user_id) or request.user.is_superuser
+        return user_id == student_user_id or request.user.is_superuser
