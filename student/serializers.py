@@ -57,6 +57,20 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ['id', 'enrolled_course']
 
+    def to_representation(self, instance):
+        representation = dict()
+        representation["ID"] = instance.id
+        course_count = 0
+        course_detail = dict()
+        for subject in instance.enrolled_course.all():
+            enrolled_courses = dict()
+            course_count = course_count + 1
+            enrolled_courses["Course ID"] = subject.id
+            enrolled_courses["Course Title"] = subject.course_title
+            course_detail[course_count] = enrolled_courses
+        representation['Enrolled Courses'] = course_detail
+        return representation
+
     def update(self, instance, validated_data):
         course = validated_data.get('enrolled_course')
         instance.enrolled_course.add(course[0])
@@ -69,3 +83,18 @@ class EnrollmentAdminSerializer(serializers.ModelSerializer):
 
         model = Student
         fields = ['enrolled_course']
+
+    def to_representation(self, instance):
+        representation = dict()
+        representation["ID"] = instance.id
+        course_count = 0
+        course_detail = dict()
+        for subject in instance.enrolled_course.all():
+            enrolled_courses = dict()
+            course_count = course_count + 1
+            enrolled_courses["Course ID"] = subject.id
+            enrolled_courses["Course Title"] = subject.course_title
+            course_detail[course_count] = enrolled_courses
+        representation['Number of Courses'] = course_count
+        representation['Enrolled Courses'] = course_detail
+        return representation
