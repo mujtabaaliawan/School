@@ -6,7 +6,5 @@ class IsStudent(BasePermission):
 
     def has_permission(self, request, view):
         user_id = request.user.id
-        if user_id is None:
-            return False
         student_user_id = Student.objects.get(id=view.kwargs['pk']).user.id
         return user_id == student_user_id or request.user.is_superuser
