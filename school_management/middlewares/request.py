@@ -15,8 +15,7 @@ class RequestRoleMiddleware(MiddlewareMixin):
                 request.student = request.user
             elif request.user.is_admin:
                 request.staff = request.user
-
-        return request
+            return request
 
     def __init__(self, get_response):
         self.get_response = get_response
