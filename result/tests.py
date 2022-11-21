@@ -12,7 +12,7 @@ class TestResult(APITestCase):
             'email': email,
             'password': password
         }
-        token_path = "/get_token/"
+        token_path = "/token/get"
         access_token = self.client.post \
             (token_path, json.dumps(token_data), content_type='application/json').data.get("access")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
