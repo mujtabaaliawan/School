@@ -3,7 +3,7 @@ from factory.django import DjangoModelFactory
 from user_profile.models import User
 from teacher.models import Teacher
 from student.models import Student
-from staff.models import Admin
+from staff.models import Staff
 from course.models import Course
 from result.models import Result
 from django.contrib.auth.hashers import make_password
@@ -45,11 +45,11 @@ class StudentFactory(DjangoModelFactory):
                               is_student=True)
 
 
-class AdminFactory(DjangoModelFactory):
+class StaffFactory(DjangoModelFactory):
     class Meta:
-        model = Admin
+        model = Staff
 
-    role = 'admin'
+    role = 'staff'
     mobile_number = '0314141414'
     user = factory.SubFactory('student.test_factory.UserFactory', first_name='Admin',
                               email='admin@gmail.com', password=make_password('admin'),

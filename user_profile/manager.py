@@ -25,7 +25,7 @@ class CustomUserManager(BaseUserManager):
             extra_fields.setdefault('is_student', True)
         elif role == 'teacher':
             extra_fields.setdefault('is_teacher', True)
-        elif role == 'admin':
+        elif role == 'staff':
             extra_fields.setdefault('is_admin', True)
         else:
             raise ValueError("Role is not correct")

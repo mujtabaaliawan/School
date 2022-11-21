@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
-from .test_factory import AdminFactory, CourseFactory
+from .test_factory import StaffFactory, CourseFactory
 from .test_factory import EnrolledStudentFactory, ResultFactory
 
 
@@ -44,7 +44,7 @@ class TestResult(APITestCase):
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -63,7 +63,7 @@ class TestResult(APITestCase):
 
         path = '/result/' + f'{self.result.id}'
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -86,7 +86,7 @@ class TestResult(APITestCase):
 
         path = '/result'
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
-from .test_factory import TeacherFactory, StudentFactory, AdminFactory
+from .test_factory import TeacherFactory, StudentFactory, StaffFactory
 
 
 class TestUser(APITestCase):
@@ -21,7 +21,7 @@ class TestUser(APITestCase):
     def test_get_user_list(self):
 
         path = '/user'
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -41,7 +41,7 @@ class TestUser(APITestCase):
 
     def test_update_user(self):
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         path = '/user/' + f'{self.admin.user.id}'
 
         test_data = {

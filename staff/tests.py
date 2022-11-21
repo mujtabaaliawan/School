@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
-from .test_factory import TeacherFactory, StudentFactory, AdminFactory
+from .test_factory import TeacherFactory, StudentFactory, StaffFactory
 
 
 class TestStaff(APITestCase):
@@ -25,7 +25,7 @@ class TestStaff(APITestCase):
                 "first_name": "John",
                 "password": "john"
             },
-            "role": "admin",
+            "role": "staff",
             "mobile_number": "03009644678"
         }
         path = "/staff/new"
@@ -40,7 +40,7 @@ class TestStaff(APITestCase):
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -54,7 +54,7 @@ class TestStaff(APITestCase):
             "mobile_number": "03004567823"
         }
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         path = '/staff/' + f'{self.admin.id}'
 
         self.user_login(email=self.admin.user.email, password='admin')
@@ -76,7 +76,7 @@ class TestStaff(APITestCase):
     def test_get_staff_list(self):
         path = '/staff'
 
-        self.admin = AdminFactory.create()
+        self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
