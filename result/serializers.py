@@ -18,6 +18,6 @@ class ResultSerializer(serializers.ModelSerializer):
         is_present = Result.objects.filter(course=course, student=student).exists()
         if request.method == 'POST' and is_present:
             raise serializers.ValidationError("Result Already Present, Update if required")
-        if is_enrolled and int(assigned_teacher_id) == int(request.user.id) or request.user.is_superuser:
+        if is_enrolled and assigned_teacher_id == request.user.id or request.user.is_superuser:
             return data
         raise serializers.ValidationError("Wrong Input of Result Parameters")

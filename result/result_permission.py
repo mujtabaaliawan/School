@@ -11,10 +11,10 @@ class IsTeacher(BasePermission):
 class IsSubjectTeacher(BasePermission):
 
     def has_permission(self, request, view):
-        pk = view.kwargs['pk']
-        subject_teacher_id = Result.objects.get(id=pk).course.course_teacher.user.id
         user_id = request.user.id
         if user_id is None:
             return False
+        pk = view.kwargs['pk']
+        subject_teacher_id = Result.objects.get(id=pk).course.course_teacher.user.id
         return user_id == subject_teacher_id or request.user.is_superuser
 

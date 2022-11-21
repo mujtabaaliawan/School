@@ -21,10 +21,10 @@ class CustomUserManager(BaseUserManager):
         email = user_data.get('email')
         first_name = user_data.get('first_name')
         password = user_data.get('password')
-        if role == 'teacher':
-            extra_fields.setdefault('is_teacher', True)
-        elif role == 'student':
+        if role == 'student':
             extra_fields.setdefault('is_student', True)
+        elif role == 'teacher':
+            extra_fields.setdefault('is_teacher', True)
         elif role == 'admin':
             extra_fields.setdefault('is_admin', True)
         else:
