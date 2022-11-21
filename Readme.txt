@@ -1,5 +1,5 @@
 Teacher:
-1. Can update his parameter mobile_number
+1. Can update his field mobile_number
 2. Can get his complete detail
 3. Can get list of all teachers
 4. Can get list of all courses
@@ -8,7 +8,7 @@ Teacher:
 7. Can update result of his course
 
 Student:
-1. Can update his parameter mobile_number
+1. Can update his field mobile_number
 2. Can enroll course
 3. Can see his complete detail
 4. Can get list of all teachers
@@ -16,7 +16,7 @@ Student:
 6. Can get list of all staff
 
 Staff:
-1. Can update his parameter mobile_number
+1. Can update his field mobile_number
 3. Can see his complete detail
 4. Can get list of all teachers
 5. Can get detailed list of all teachers
