@@ -20,7 +20,7 @@ class TestCourse(APITestCase):
 
     def test_create_course(self):
 
-        path = "/subject/new"
+        path = "/course/new"
 
         self.teacher = TeacherFactory.create()
         test_data = {
@@ -52,7 +52,7 @@ class TestCourse(APITestCase):
         test_data = {
             'course_title': 'Mathematics',
         }
-        path = '/subject/' + f'{self.course.id}'
+        path = '/course/' + f'{self.course.id}'
 
         self.admin = AdminFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
@@ -73,7 +73,7 @@ class TestCourse(APITestCase):
     def test_get_course_list(self):
 
         self.course = CourseFactory.create()
-        path = '/subject'
+        path = '/course'
 
         self.admin = AdminFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')

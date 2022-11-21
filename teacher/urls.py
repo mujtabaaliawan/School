@@ -3,8 +3,8 @@ from teacher import views
 
 
 urlpatterns = [
-    path('faculty', views.TeacherList.as_view(), name='faculty_list'),
-    path('faculty/detail', views.TeacherDetailList.as_view(), name='faculty_detail'),
-    path('faculty/new', views.TeacherCreate.as_view(), name='new_faculty'),
-    path('faculty/<int:pk>', views.TeacherRetrieveUpdate.as_view(), name='faculty_update'),
+    path('teacher', views.TeacherList.as_view(), name='teacher_list'),
+    path('teacher/detail', views.TeacherDetailList.as_view(), name='teacher_detail'),
+    path('teacher/new', views.TeacherCreate.as_view(), name='new_teacher'),
+    path('teacher/<int:pk>', views.TeacherRetrieveUpdate.as_view(), name='teacher_update'),
 ]

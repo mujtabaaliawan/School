@@ -30,7 +30,7 @@ class TestResult(APITestCase):
             "score": 90
         }
 
-        path = "/results/new"
+        path = "/result/new"
 
         self.user_login(email=self.course.course_teacher.user.email, password='teacher')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
@@ -61,7 +61,7 @@ class TestResult(APITestCase):
             "score": 60.0
         }
 
-        path = '/results/' + f'{self.result.id}'
+        path = '/result/' + f'{self.result.id}'
 
         self.admin = AdminFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
@@ -84,7 +84,7 @@ class TestResult(APITestCase):
         self.student = EnrolledStudentFactory.create(enrolled_course=self.course.id)
         self.result = ResultFactory.create(course=self.course, student=self.student)
 
-        path = '/results'
+        path = '/result'
 
         self.admin = AdminFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')

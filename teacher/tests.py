@@ -29,7 +29,7 @@ class TestTeacher(APITestCase):
             "role": "teacher",
             "mobile_number": "03004567823"
         }
-        path = "/faculty/new"
+        path = "/teacher/new"
 
         self.teacher = TeacherFactory.create()
         self.user_login(email=self.teacher.user.email, password='teacher')
@@ -56,7 +56,7 @@ class TestTeacher(APITestCase):
             "mobile_number": "03004567823"
         }
         self.teacher = TeacherFactory.create()
-        path = '/faculty/' + f'{self.teacher.id}'
+        path = '/teacher/' + f'{self.teacher.id}'
 
         self.user_login(email=self.teacher.user.email, password='teacher')
         response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
@@ -77,7 +77,7 @@ class TestTeacher(APITestCase):
     def test_get_teacher_detail(self):
 
         self.teacher = TeacherFactory.create()
-        path = '/faculty/' + f'{self.teacher.id}'
+        path = '/teacher/' + f'{self.teacher.id}'
 
         self.user_login(email=self.teacher.user.email, password='teacher')
         response = self.client.get(path)
@@ -99,7 +99,7 @@ class TestTeacher(APITestCase):
 
     def test_get_teacher_list(self):
 
-        path = '/faculty'
+        path = '/teacher'
 
         self.teacher = TeacherFactory.create()
         self.user_login(email=self.teacher.user.email, password='teacher')
@@ -130,7 +130,7 @@ class TestTeacher(APITestCase):
 
     def test_get_teacher_detail_list(self):
 
-        path = '/faculty/detail'
+        path = '/teacher/detail'
 
         self.teacher = TeacherFactory.create()
         self.user_login(email=self.teacher.user.email, password='teacher')
