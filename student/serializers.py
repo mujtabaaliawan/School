@@ -15,6 +15,7 @@ class StudentSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'enrolled_course': {'read_only': True}
         }
+        ordering = ['id']
 
     def create(self, validated_data):
         user = UserSerializer.create(self, validated_data=validated_data)

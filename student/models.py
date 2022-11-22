@@ -10,6 +10,10 @@ class Student(models.Model):
     mobile_number = models.CharField(max_length=20, default='0')
     enrolled_course = models.ManyToManyField(Course, blank=True)
 
+    class Meta:
+        ordering = ['id']
+
+
 
 
 

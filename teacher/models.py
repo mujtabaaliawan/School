@@ -8,3 +8,6 @@ class Teacher(models.Model):
     role = models.CharField(max_length=10, default='teacher')
     mobile_number = models.CharField(max_length=20, default='0')
 
+    class Meta:
+        ordering = ['id']
+
