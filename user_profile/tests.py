@@ -1,7 +1,8 @@
+from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from user_profile.factories import TeacherFactory, StudentFactory, StaffFactory
 import json
-from .test_factory import TeacherFactory, StudentFactory, StaffFactory
 
 
 class TestUser(APITestCase):
@@ -11,7 +12,7 @@ class TestUser(APITestCase):
             'email': email,
             'password': password
         }
-        token_path = "/token/get"
+        token_path = reverse('token_new')
         access_token = self.client.post \
             (token_path, json.dumps(token_data), content_type='application/json').data.get("access")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -20,7 +21,7 @@ class TestUser(APITestCase):
 
     def test_get_user_list(self):
 
-        path = '/user'
+        path = reverse('user_list')
         self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
@@ -42,7 +43,7 @@ class TestUser(APITestCase):
     def test_update_user(self):
 
         self.admin = StaffFactory.create()
-        path = '/user/' + f'{self.admin.user.id}'
+        path = reverse('user_update', kwargs={'pk': self.admin.user.id})
 
         test_data = {
             "first_name": "Khalid"

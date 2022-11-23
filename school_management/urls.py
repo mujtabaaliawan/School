@@ -5,9 +5,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('auth/', include('rest_framework.urls')),
-    path('admin', admin.site.urls),
-    path('token/get', TokenObtainPairView.as_view()),
-    path('token/refresh', TokenRefreshView.as_view()),
+    path('admin/', admin.site.urls),
+    path('token/get', TokenObtainPairView.as_view(), name='token_new'),
+    path('token/refresh', TokenRefreshView.as_view(), name='token_update'),
     path('', include('user_profile.urls')),
     path('', include('teacher.urls')),
     path('', include('student.urls')),

@@ -1,8 +1,8 @@
 from .models import Student
-from .serializers import StudentSerializer, EnrollmentSerializer, EnrollmentAdminSerializer
+from .serializers import StudentSerializer, EnrollmentSerializer
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
-from .student_permission import IsStudent
+from .student_permission import IsStudent, IsStudentAdmin
 from .admin_permission import IsAdmin
 
 
@@ -27,15 +27,9 @@ class StudentUpdate(RetrieveUpdateAPIView):
     permission_classes = [IsStudent]
 
 
-class EnrollmentNew(UpdateAPIView):
+class EnrollmentUpdate(UpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = EnrollmentSerializer
 
-    permission_classes = [IsStudent]
+    permission_classes = [IsStudentAdmin]
 
-
-class EnrollmentUpdate(RetrieveUpdateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = EnrollmentAdminSerializer
-
-    permission_classes = [IsAdmin]

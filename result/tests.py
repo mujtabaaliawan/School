@@ -1,8 +1,9 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
-from .test_factory import StaffFactory, CourseFactory
-from .test_factory import EnrolledStudentFactory, ResultFactory
+from django.urls import reverse
+from .factories import StaffFactory, CourseFactory
+from .factories import EnrolledStudentFactory, ResultFactory
 
 
 class TestResult(APITestCase):
@@ -12,7 +13,7 @@ class TestResult(APITestCase):
             'email': email,
             'password': password
         }
-        token_path = "/token/get"
+        token_path = reverse('token_new')
         access_token = self.client.post \
             (token_path, json.dumps(token_data), content_type='application/json').data.get("access")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -30,7 +31,7 @@ class TestResult(APITestCase):
             "score": 90
         }
 
-        path = "/result/new"
+        path = reverse('result_new')
 
         self.user_login(email=self.course.course_teacher.user.email, password='teacher')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
@@ -61,7 +62,7 @@ class TestResult(APITestCase):
             "score": 60.0
         }
 
-        path = '/result/' + f'{self.result.id}'
+        path = reverse('result_update', kwargs={'pk': self.result.id})
 
         self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
@@ -84,15 +85,15 @@ class TestResult(APITestCase):
         self.student = EnrolledStudentFactory.create(enrolled_course=self.course.id)
         self.result = ResultFactory.create(course=self.course, student=self.student)
 
-        path = '/result'
+        path = reverse('result_list')
 
         self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data[0].get('student'), self.result.student.id)
-        self.assertEqual(response.data[0].get('course'), self.result.course.id)
+        self.assertEqual(response.data[0].get('student')['id'], self.result.student.id)
+        self.assertEqual(response.data[0].get('course')['id'], self.result.course.id)
         self.assertEqual(response.data[0].get('score'), self.result.score)
 
         self.user_login(email=self.course.course_teacher.user.email, password='teacher')

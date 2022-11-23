@@ -1,6 +1,7 @@
 from django.utils.deprecation import MiddlewareMixin
-from httpie import status
-from rest_framework import exceptions
+from teacher.models import Teacher
+from staff.models import Staff
+from student.models import Student
 
 
 class RequestRoleMiddleware(MiddlewareMixin):
@@ -12,12 +13,12 @@ class RequestRoleMiddleware(MiddlewareMixin):
             request.teacher = None
             request.student = None
             request.staff = None
-            if request.user.is_teacher:
-                request.teacher = request.user
-            elif request.user.is_student:
-                request.student = request.user
+            if request.user.is_student:
+                request.student = Student.objects.get(user_id=request.user.id)
+            elif request.user.is_teacher:
+                request.teacher = Teacher.objects.get(user_id=request.user.id)
             elif request.user.is_admin:
-                request.staff = request.user
+                request.staff = Staff.objects.get(user_id=request.user.id)
         return request
 
     def __init__(self, get_response):

@@ -27,7 +27,7 @@ class TeacherFactory(DjangoModelFactory):
 
     role = 'teacher'
     mobile_number = '0312121212'
-    user = factory.SubFactory('teacher.test_factory.UserFactory', first_name='Teacher',
+    user = factory.SubFactory('teacher.factories.UserFactory', first_name='Teacher',
                               email='teacher@gmail.com', password=make_password('teacher'),
                               is_teacher=True)
 
@@ -38,7 +38,7 @@ class StudentFactory(DjangoModelFactory):
 
     role = 'student'
     mobile_number = '0313131313'
-    user = factory.SubFactory('teacher.test_factory.UserFactory', first_name='Student',
+    user = factory.SubFactory('teacher.factories.UserFactory', first_name='Student',
                               email='student@gmail.com', password=make_password('student'),
                               is_student=True)
 
@@ -49,6 +49,6 @@ class StaffFactory(DjangoModelFactory):
 
     role = 'staff'
     mobile_number = '0314141414'
-    user = factory.SubFactory('teacher.test_factory.UserFactory', first_name='Admin',
+    user = factory.SubFactory('teacher.factories.UserFactory', first_name='Admin',
                               email='admin@gmail.com', password=make_password('admin'),
                               is_admin=True)

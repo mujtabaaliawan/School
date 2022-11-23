@@ -1,12 +1,12 @@
 from .models import Student
 from rest_framework import serializers
 from user_profile.serializers import UserSerializer
-from course.models import Course
-from result.models import Result
+from course.serializers import CourseSerializer
 
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
+    enrolled_course = CourseSerializer(many=True)
 
     class Meta:
 
@@ -15,7 +15,6 @@ class StudentSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'enrolled_course': {'read_only': True}
         }
-        ordering = ['id']
 
     def create(self, validated_data):
         user = UserSerializer.create(self, validated_data=validated_data)
@@ -23,32 +22,6 @@ class StudentSerializer(serializers.ModelSerializer):
         mobile_number = validated_data.get('mobile_number')
         student, created = Student.objects.update_or_create(user=user, role=role, mobile_number=mobile_number)
         return student
-
-    def to_representation(self, instance):
-        representation = dict()
-        representation["ID"] = instance.id
-        representation["Name"] = instance.user.first_name
-        representation["Email"] = instance.user.email
-        representation["Mobile Number"] = instance.mobile_number
-        representation["User ID"] = instance.user.id
-        course_count = 0
-        course_detail = dict()
-        for subject in instance.enrolled_course.all():
-            enrolled_courses = dict()
-            course_count = course_count + 1
-            enrolled_courses["Course ID"] = subject.id
-            enrolled_courses["Course Title"] = subject.course_title
-            enrolled_courses["Course Teacher ID"] = subject.course_teacher.id
-            enrolled_courses["Course Teacher Name"] = subject.course_teacher.user.first_name
-            enrolled_courses["Course Teacher Email"] = subject.course_teacher.user.email
-            course_result = Result.objects.filter(student=instance).filter(course=subject)
-            if course_result.exists():
-                enrolled_courses["Course Marks"] = course_result[0].score
-            else:
-                enrolled_courses["Course Marks"] = 'Result not entered'
-            course_detail[course_count] = enrolled_courses
-        representation['Enrolled Courses'] = course_detail
-        return representation
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
@@ -58,44 +31,11 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ['id', 'enrolled_course']
 
-    def to_representation(self, instance):
-        representation = dict()
-        representation["ID"] = instance.id
-        course_count = 0
-        course_detail = dict()
-        for subject in instance.enrolled_course.all():
-            enrolled_courses = dict()
-            course_count = course_count + 1
-            enrolled_courses["Course ID"] = subject.id
-            enrolled_courses["Course Title"] = subject.course_title
-            course_detail[course_count] = enrolled_courses
-        representation['Enrolled Courses'] = course_detail
-        return representation
-
     def update(self, instance, validated_data):
+        request = self.context['request']
         course = validated_data.get('enrolled_course')
-        instance.enrolled_course.add(course[0])
-        return instance
-
-
-class EnrollmentAdminSerializer(serializers.ModelSerializer):
-
-    class Meta:
-
-        model = Student
-        fields = ['enrolled_course']
-
-    def to_representation(self, instance):
-        representation = dict()
-        representation["ID"] = instance.id
-        course_count = 0
-        course_detail = dict()
-        for subject in instance.enrolled_course.all():
-            enrolled_courses = dict()
-            course_count = course_count + 1
-            enrolled_courses["Course ID"] = subject.id
-            enrolled_courses["Course Title"] = subject.course_title
-            course_detail[course_count] = enrolled_courses
-        representation['Number of Courses'] = course_count
-        representation['Enrolled Courses'] = course_detail
-        return representation
+        if request.user.is_student:
+            if len(course) != 0:
+                instance.enrolled_course.add(course[0])
+            return instance
+        return super().update(instance, validated_data)

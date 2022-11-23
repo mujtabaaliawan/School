@@ -5,6 +5,7 @@ from .models import Teacher
 class IsTeacher(BasePermission):
 
     def has_permission(self, request, view):
-        user_id = request.user.id
-        teacher_user_id = Teacher.objects.get(id=view.kwargs['pk']).user.id
-        return user_id == teacher_user_id or request.user.is_superuser
+        if request.teacher is None:
+            return False
+        teacher_user_id = view.kwargs['pk']
+        return request.teacher.id == teacher_user_id or request.user.is_superuser

@@ -1,7 +1,8 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 import json
-from .test_factory import TeacherFactory, StudentFactory, StaffFactory, CourseFactory
+from django.urls import reverse
+from .factories import TeacherFactory, StudentFactory, StaffFactory, CourseFactory
 
 
 class TestCourse(APITestCase):
@@ -11,7 +12,7 @@ class TestCourse(APITestCase):
             'email': email,
             'password': password
         }
-        token_path = "/token/get"
+        token_path = reverse('token_new')
         access_token = self.client.post \
             (token_path, json.dumps(token_data), content_type='application/json').data.get("access")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -20,12 +21,13 @@ class TestCourse(APITestCase):
 
     def test_create_course(self):
 
-        path = "/course/new"
+        path = reverse('course_new')
 
         self.teacher = TeacherFactory.create()
+
         test_data = {
-            "course_title": "Mathematics",
-            "course_teacher": self.teacher.id
+            "course_teacher":self.teacher.id,
+            "course_title": "Django"
             }
 
         self.admin = StaffFactory.create()
@@ -33,8 +35,8 @@ class TestCourse(APITestCase):
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEqual(response.data.get('Course Title'), test_data['course_title'])
-        self.assertEqual(response.data.get('Teacher ID'), test_data['course_teacher'])
+        self.assertEqual(response.data.get('course_title'), test_data['course_title'])
+        self.assertEqual(response.data.get('course_teacher'), self.teacher.id)
 
         self.user_login(email=self.teacher.user.email, password='teacher')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
@@ -52,14 +54,14 @@ class TestCourse(APITestCase):
         test_data = {
             'course_title': 'Mathematics',
         }
-        path = '/course/' + f'{self.course.id}'
+        path = reverse('course_update', kwargs={'pk': self.course.id})
 
         self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data.get('Course Title'), test_data['course_title'])
+        self.assertEqual(response.data.get('course_title'), test_data['course_title'])
 
         self.user_login(email=self.course.course_teacher.user.email, password='teacher')
         response = self.client.patch(path, json.dumps(test_data), content_type='application/json')
@@ -73,36 +75,43 @@ class TestCourse(APITestCase):
     def test_get_course_list(self):
 
         self.course = CourseFactory.create()
-        path = '/course'
+        path = reverse('course_list')
 
         self.admin = StaffFactory.create()
         self.user_login(email=self.admin.user.email, password='admin')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data[0].get('Course ID'), self.course.id)
-        self.assertEqual(response.data[0].get('Course Title'), self.course.course_title)
-        self.assertEqual(response.data[0].get('Teacher ID'), self.course.course_teacher.id)
-        self.assertEqual(response.data[0].get('Teacher Name'), self.course.course_teacher.user.first_name)
-        self.assertEqual(response.data[0].get('Teacher Email'), self.course.course_teacher.user.email)
+        self.assertEqual(response.data[0].get('id'), self.course.id)
+        self.assertEqual(response.data[0].get('course_title'), self.course.course_title)
+        self.assertEqual(response.data[0].get('course_teacher').get('id'), self.course.course_teacher.id)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['first_name'],
+                         self.course.course_teacher.user.first_name)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['email'],
+                         self.course.course_teacher.user.email)
 
         self.user_login(email=self.course.course_teacher.user.email, password='teacher')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data[0].get('Course ID'), self.course.id)
-        self.assertEqual(response.data[0].get('Course Title'), self.course.course_title)
-        self.assertEqual(response.data[0].get('Teacher ID'), self.course.course_teacher.id)
-        self.assertEqual(response.data[0].get('Teacher Name'), self.course.course_teacher.user.first_name)
-        self.assertEqual(response.data[0].get('Teacher Email'), self.course.course_teacher.user.email)
+        self.assertEqual(response.data[0].get('id'), self.course.id)
+        self.assertEqual(response.data[0].get('course_title'), self.course.course_title)
+        self.assertEqual(response.data[0].get('course_teacher').get('id'), self.course.course_teacher.id)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['first_name'],
+                         self.course.course_teacher.user.first_name)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['email'],
+                         self.course.course_teacher.user.email)
 
         self.student = StudentFactory.create()
         self.user_login(email=self.student.user.email, password='student')
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data[0].get('Course ID'), self.course.id)
-        self.assertEqual(response.data[0].get('Course Title'), self.course.course_title)
-        self.assertEqual(response.data[0].get('Teacher ID'), self.course.course_teacher.id)
-        self.assertEqual(response.data[0].get('Teacher Name'), self.course.course_teacher.user.first_name)
-        self.assertEqual(response.data[0].get('Teacher Email'), self.course.course_teacher.user.email)
+        self.assertEqual(response.data[0].get('id'), self.course.id)
+        self.assertEqual(response.data[0].get('course_title'), self.course.course_title)
+        self.assertEqual(response.data[0].get('course_teacher').get('id'), self.course.course_teacher.id)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['first_name'],
+                         self.course.course_teacher.user.first_name)
+        self.assertEqual(response.data[0].get('course_teacher').get('user')['email'],
+                         self.course.course_teacher.user.email)
+

@@ -1,5 +1,18 @@
 from result.models import Result
 from rest_framework import serializers
+from student.serializers import StudentSerializer
+from course.serializers import CourseSerializer
+
+
+class ResultListSerializer(serializers.ModelSerializer):
+
+    student = StudentSerializer()
+    course = CourseSerializer()
+
+    class Meta:
+
+        model = Result
+        fields = '__all__'
 
 
 class ResultSerializer(serializers.ModelSerializer):
@@ -7,7 +20,7 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Result
-        fields = ['id', 'student', 'course', 'score']
+        fields = '__all__'
 
     def validate(self, data):
         student = data.get('student')

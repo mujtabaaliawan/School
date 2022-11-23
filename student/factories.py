@@ -5,7 +5,6 @@ from teacher.models import Teacher
 from student.models import Student
 from staff.models import Staff
 from course.models import Course
-from result.models import Result
 from django.contrib.auth.hashers import make_password
 
 
@@ -29,7 +28,7 @@ class TeacherFactory(DjangoModelFactory):
 
     role = 'teacher'
     mobile_number = '0312121212'
-    user = factory.SubFactory('student.test_factory.UserFactory', first_name='Teacher',
+    user = factory.SubFactory('student.factories.UserFactory', first_name='Teacher',
                               email='teacher@gmail.com', password=make_password('teacher'),
                               is_teacher=True)
 
@@ -40,7 +39,7 @@ class StudentFactory(DjangoModelFactory):
 
     role = 'student'
     mobile_number = '0313131313'
-    user = factory.SubFactory('student.test_factory.UserFactory', first_name='Student',
+    user = factory.SubFactory('student.factories.UserFactory', first_name='Student',
                               email='student@gmail.com', password=make_password('student'),
                               is_student=True)
 
@@ -51,7 +50,7 @@ class StaffFactory(DjangoModelFactory):
 
     role = 'staff'
     mobile_number = '0314141414'
-    user = factory.SubFactory('student.test_factory.UserFactory', first_name='Admin',
+    user = factory.SubFactory('student.factories.UserFactory', first_name='Admin',
                               email='admin@gmail.com', password=make_password('admin'),
                               is_admin=True)
 
@@ -70,7 +69,7 @@ class EnrolledStudentFactory(DjangoModelFactory):
 
     role = 'student'
     mobile_number = '0313131313'
-    user = factory.SubFactory('student.test_factory.UserFactory', first_name='Student',
+    user = factory.SubFactory('student.factories.UserFactory', first_name='Student',
                               email='student@gmail.com', password=make_password('student'),
                               is_student=True)
 
@@ -79,10 +78,7 @@ class EnrolledStudentFactory(DjangoModelFactory):
     @factory.post_generation
     def enrolled_course(self, create, extracted, **kwargs):
         if not create or not extracted:
-            # Simple build, or nothing to add, do nothing.
             return
-
-        # Add the iterable of groups using bulk addition
         self.enrolled_course.add(extracted)
 
 
@@ -92,7 +88,7 @@ class TeacherBulkFactory(DjangoModelFactory):
 
     role = 'teacher'
     mobile_number = factory.Faker('phone_number')
-    user = factory.SubFactory('student.test_factory.UserFactory', first_name=factory.Faker('name'),
+    user = factory.SubFactory('student.factories.UserFactory', first_name=factory.Faker('name'),
                               email=factory.Faker('email'), password=make_password('teacher'),
                               is_teacher=True)
 
@@ -103,14 +99,3 @@ class CourseBulkFactory(DjangoModelFactory):
 
     course_title = factory.Faker('name')
     course_teacher = factory.SubFactory(TeacherBulkFactory)
-
-
-class ResultFactory(DjangoModelFactory):
-
-    class Meta:
-        model = Result
-
-    course = factory.SubFactory(CourseFactory)
-    student = factory.SubFactory(EnrolledStudentFactory)
-    score = 90.0
-
