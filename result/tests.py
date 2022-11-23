@@ -26,9 +26,9 @@ class TestResult(APITestCase):
         self.student = EnrolledStudentFactory.create(enrolled_course=self.course.id)
 
         test_data = {
-            "student": self.student.id,
-            "course": self.course.id,
-            "score": 90
+            "student_id": self.student.id,
+            "course_id": self.course.id,
+            "score": 90.0
         }
 
         path = reverse('result_new')
@@ -37,8 +37,8 @@ class TestResult(APITestCase):
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEqual(response.data.get('student'), test_data.get('student'))
-        self.assertEqual(response.data.get('course'), test_data.get('course'))
+        self.assertEqual(response.data.get('student')['id'], test_data.get('student_id'))
+        self.assertEqual(response.data.get('course')['id'], test_data.get('course_id'))
         self.assertEqual(response.data.get('score'), test_data.get('score'))
 
         self.user_login(email=self.student.user.email, password='student')
@@ -57,8 +57,9 @@ class TestResult(APITestCase):
         self.result = ResultFactory.create(course=self.course, student=self.student)
 
         test_data = {
-            "student": self.result.student.id,
-            "course": self.result.course.id,
+            "id": self.result.id,
+            "student_id": self.result.student.id,
+            "course_id": self.result.course.id,
             "score": 60.0
         }
 

@@ -2,20 +2,19 @@ from result.models import Result
 from rest_framework import serializers
 from student.serializers import StudentSerializer
 from course.serializers import CourseSerializer
-
-
-class ResultListSerializer(serializers.ModelSerializer):
-
-    student = StudentSerializer()
-    course = CourseSerializer()
-
-    class Meta:
-
-        model = Result
-        fields = '__all__'
+from student.models import Student
+from course.models import Course
 
 
 class ResultSerializer(serializers.ModelSerializer):
+
+    student = StudentSerializer(read_only=True)
+    student_id = serializers.PrimaryKeyRelatedField(
+        queryset=Student.objects.all(), source='student', write_only=True)
+
+    course = CourseSerializer(read_only=True)
+    course_id = serializers.PrimaryKeyRelatedField(
+        queryset=Course.objects.all(), source='course', write_only=True)
 
     class Meta:
 

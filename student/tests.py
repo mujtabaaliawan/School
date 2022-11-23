@@ -102,7 +102,7 @@ class TestStudent(APITestCase):
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_create_student_enrollment(self):
+    def test_create_enrollment(self):
 
         self.course = CourseFactory.create()
         self.student = StudentFactory.create()
@@ -136,7 +136,7 @@ class TestStudent(APITestCase):
 
         self.assertEqual(response.data.get('enrolled_course'), test_data['enrolled_course'])
 
-    def test_update_clear_student_enrollment(self):
+    def test_clear_enrollment(self):
 
         self.course = CourseFactory.create()
         self.student = EnrolledStudentFactory.create(enrolled_course=self.course.id)
@@ -164,7 +164,7 @@ class TestStudent(APITestCase):
 
         self.assertEqual(response.data.get('enrolled_course'), test_data['enrolled_course'])
 
-    def test_update_add_student_enrollment(self):
+    def test_update_enrollment(self):
 
         self.course_one = CourseFactory.create()
         self.student = EnrolledStudentFactory.create(enrolled_course=self.course_one.id)

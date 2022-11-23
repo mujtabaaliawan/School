@@ -24,9 +24,26 @@ class TestCourse(APITestCase):
         path = reverse('course_new')
 
         self.teacher = TeacherFactory.create()
+        # teacher_data = {
+        #     "id": self.teacher.id,
+        #     "user": {
+        #         "id": self.teacher.user.id,
+        #         "email": self.teacher.user.email,
+        #         "first_name": self.teacher.user.first_name,
+        #         "password": 'teacher'
+        #     },
+        #     "role": self.teacher.role,
+        #     "mobile_number": self.teacher.mobile_number
+        # }
+        # test_data = {
+        #     "course_teacher": self.teacher,
+        #     "course_title": "Django"
+        #     }
+        #
+        # print(json.dumps(test_data))
 
         test_data = {
-            "course_teacher":self.teacher.id,
+            "course_teacher_id": self.teacher.id,
             "course_title": "Django"
             }
 
@@ -36,7 +53,7 @@ class TestCourse(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(response.data.get('course_title'), test_data['course_title'])
-        self.assertEqual(response.data.get('course_teacher'), self.teacher.id)
+        self.assertEqual(response.data.get('course_teacher')['id'], self.teacher.id)
 
         self.user_login(email=self.teacher.user.email, password='teacher')
         response = self.client.post(path, json.dumps(test_data), content_type='application/json')
